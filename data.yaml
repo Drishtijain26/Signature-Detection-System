@@ -1,0 +1,4 @@
+train: "C:/Users/Drishti Jain/Desktop/signature_detection/datasets/data/train/images"
+val: "C:/Users/Drishti Jain/Desktop/signature_detection/datasets/data/val/images"
+nc: 2  # Number of classes
+names: ['signature', 'non-signature']  # Class names

@@ -1,0 +1,39 @@
+import os
+
+def create_yolo_labels(image_dir, annotations):
+    """
+    Creates YOLO formatted label files for the images in the image_dir.
+    annotations: List of tuples with (image_name, x1, y1, x2, y2)
+    """
+    for annotation in annotations:
+        image_name, x1, y1, x2, y2 = annotation
+        # Normalize coordinates
+        image_path = os.path.join(image_dir, image_name)
+        width, height = get_image_dimensions(image_path)
+
+        # Normalize to YOLO format
+        x_center = (x1 + x2) / 2 / width
+        y_center = (y1 + y2) / 2 / height
+        width_norm = (x2 - x1) / width
+        height_norm = (y2 - y1) / height
+
+        label_content = f"0 {x_center} {y_center} {width_norm} {height_norm}\n"  # Assuming class '0' for signature
+
+        label_file = os.path.join(image_dir, image_name.replace('.jpg', '.txt'))  # Assuming image format is jpg
+        with open(label_file, 'w') as f:
+            f.write(label_content)
+
+def get_image_dimensions(image_path):
+    from PIL import Image
+    with Image.open(image_path) as img:
+        width, height = img.size
+    return width, height
+
+# Example usage
+annotations = [
+    ("image1.jpg", 50, 60, 100, 120),
+    ("image2.jpg", 150, 200, 80, 90),
+    # Add more annotations here
+]
+image_dir = "path/to/your/images"  # Change this to your image directory
+create_yolo_labels(image_dir, annotations)
